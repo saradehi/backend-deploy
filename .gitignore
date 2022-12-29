@@ -2,4 +2,4 @@
 /.env
 
 #Dependency
-/node_modules/
+/node_modules
