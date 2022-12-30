@@ -4,7 +4,7 @@ const router = Router();
 const {Dog, Temperament} = require('../db');
 
 
-// Promises
+// Promisess
 
 router.get('/', (req, res) => {
     
