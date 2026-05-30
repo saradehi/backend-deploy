@@ -70,7 +70,7 @@ const getDogsApi = async () => {
         temperament: ele.temperament,
         image:
           ele.image?.url ||
-          `https://source.unsplash.com/featured/?dog,${ele.name.replace(/\s+/g, "")}`,
+          `https://img.freepik.com/vector-premium/lindo-cachorro-collar-amarillo-sienta-sobre-fondo-blanco_198306-1.jpg?semt=ais_hybrid&w=740&q=80`,
       };
     });
 

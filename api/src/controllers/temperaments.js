@@ -13,7 +13,6 @@ const temperamentsHandler = async() => {
 
     
     else {
-        // Bring all temperaments from API
         const url = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`);
         let res = await url.data.map(ele => ele.temperament);
         res = res.join(', ').split(',').map(ele => ele.trim())
