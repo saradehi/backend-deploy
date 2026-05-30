@@ -58,6 +58,15 @@ const getDogsApi = async () => {
         ? ele.weight.metric.split(" - ")
         : ["0"];
 
+        let dogImage = "";
+        if (ele.image?.url) {
+          dogImage = ele.image.url;
+        } else if (ele.reference_image_id) {
+          dogImage = `https://cdn2.thedogapi.com/images/${ele.reference_image_id}.jpg`;
+        } else {
+          dogImage = `https://cdn2.thedogapi.com/images/${ele.id}.jpg`;
+        }
+
       return {
         id: ele.id,
         name: ele.name,
