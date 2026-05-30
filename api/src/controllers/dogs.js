@@ -4,36 +4,83 @@ const axios = require('axios');
 const {Dog, Temperament} = require('../db');
 
 
-const getDogsApi = async() => {
+// const getDogsApi = async() => {
 
-    const url = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`);
+//     const url = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`);
 
-    if(!url) {
-        throw new Error("Can't find dog")
-    }
-    else {
-        const res = url.data.map(ele => {
+//     if(!url) {
+//         throw new Error("Can't find dog")
+//     }
+//     else {
+//         const res = url.data.map(ele => {
 
-            let arrWeight = ele.weight.metric.split(' - ')
+//             let arrWeight = ele.weight.metric.split(' - ')
     
-            return { 
-                id: ele.id,
-                name: ele.name,
-                height: ele.height.metric,
-                weight: arrWeight.map(ele=> ele === 'NaN' ? ele = 0 : parseInt(ele)).reduce((a, b) => a + b)/2,
-                weight_min: arrWeight[0] === 'NaN' ? '0' : arrWeight[0],
-                weight_max: arrWeight[1] ? arrWeight[1] : '0',
-                life_span: ele.life_span,
-                temperament: ele.temperament,
-                image: ele.image.url
-            }
-        });
+//             return { 
+//                 id: ele.id,
+//                 name: ele.name,
+//                 height: ele.height.metric,
+//                 weight: arrWeight.map(ele=> ele === 'NaN' ? ele = 0 : parseInt(ele)).reduce((a, b) => a + b)/2,
+//                 weight_min: arrWeight[0] === 'NaN' ? '0' : arrWeight[0],
+//                 weight_max: arrWeight[1] ? arrWeight[1] : '0',
+//                 life_span: ele.life_span,
+//                 temperament: ele.temperament,
+//                 image: ele.image.url
+//             }
+//         });
     
-        return res;
+//         return res;
             
-    }
+//     }
     
-}
+// }
+
+const getDogsApi = async () => {
+  try {
+
+   
+    const response = await axios.get(
+      `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`,
+    );
+
+   
+    if (!Array.isArray(response.data)) {
+      console.log("--- ¡ALERTA! El backend no recibió un Array de perros ---");
+      console.log("Respuesta real de la API:", response.data);
+      return [];
+    }
+
+    
+    const res = response.data.map((ele) => {
+      let arrWeight = ele.weight?.metric
+        ? ele.weight.metric.split(" - ")
+        : ["0"];
+
+      return {
+        id: ele.id,
+        name: ele.name,
+        height: ele.height?.metric || "0",
+        weight: arrWeight.map((e) => (e === "NaN" ? "0" : e)),
+        weight_min: arrWeight[0] === "NaN" ? "0" : arrWeight[0] || "0",
+        weight_max: arrWeight[1] ? arrWeight[1] : "0",
+        life_span: ele.life_span,
+        temperament: ele.temperament,
+        image: ele.image?.url || "",
+      };
+    });
+
+    return res;
+  } catch (error) {
+    console.log("=== ERROR EN LA PETICIÓN A THE DOG API ===");
+    if (error.response) {
+      console.log("Código de estado HTTP:", error.response.status);
+      console.log("Detalle enviado por la API:", error.response.data);
+    } else {
+      console.log("Error general del servidor:", error.message);
+    }
+    return []; 
+  }
+};
 
 const getDogsDb = async() => {
 
