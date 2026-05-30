@@ -38,19 +38,21 @@ const {Dog, Temperament} = require('../db');
 const getDogsApi = async () => {
   try {
 
-   
+    
     const response = await axios.get(
       `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`,
+      {
+        headers: {
+          "Accept-Encoding": "identity", 
+        },
+      },
     );
 
-   
     if (!Array.isArray(response.data)) {
       console.log("--- ¡ALERTA! El backend no recibió un Array de perros ---");
-      console.log("Respuesta real de la API:", response.data);
       return [];
     }
 
-    
     const res = response.data.map((ele) => {
       let arrWeight = ele.weight?.metric
         ? ele.weight.metric.split(" - ")
@@ -74,11 +76,10 @@ const getDogsApi = async () => {
     console.log("=== ERROR EN LA PETICIÓN A THE DOG API ===");
     if (error.response) {
       console.log("Código de estado HTTP:", error.response.status);
-      console.log("Detalle enviado por la API:", error.response.data);
     } else {
       console.log("Error general del servidor:", error.message);
     }
-    return []; 
+    return [];
   }
 };
 
